@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const now = require('performance-now');
+const variables = require('../variables.js');
 
 var pingMessage;
 
@@ -7,7 +8,7 @@ module.exports = {
   send: async function(msg) {
     let start = now();
     let mbd = new Discord.MessageEmbed()
-      .setColor('#0099ff')
+      .setColor(await variables.embedColor())
       .setTitle('<:ping_pong:863658173999480893> Pong!')
       .addFields({
         name: "Message Speed",

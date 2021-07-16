@@ -24,7 +24,7 @@ module.exports = {
         .setTitle(target.username)
         .setDescription(target.id)
         .setThumbnail(await target.avatarURL())
-        .setColor("#FFFFFF")
+        .setColor(await variables.embedColor())
         .setFooter(await variables.footer(), await variables.footerImage())
         .addFields({
           name: "Is Bot",

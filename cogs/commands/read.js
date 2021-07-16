@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-
+const variables = require('../variables.js');
 const channelRegex = new RegExp("^[0-9]{18}$");
 
 module.exports = {
@@ -17,6 +17,7 @@ module.exports = {
       let mbd = new Discord.MessageEmbed()
         .setTitle("Current Servers")
         .setDescription(`Currently in ${readServers.length} servers`)
+        .setColor(await variables.embedColor())
         .addFields(readServers);
       try {
         await msg.channel.send({embed: mbd});
@@ -40,6 +41,7 @@ module.exports = {
         console.log(channelNames);
         let mbd = new Discord.MessageEmbed()
           .setTitle(`Channels in ${flags[2]}`)
+          .setColor(await variables.embedColor())
           .setFields(channelNames);
         try {
           await msg.channel.send({embed: mbd});

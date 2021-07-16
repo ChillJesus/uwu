@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const HMfull = require('hmfull');
+const variables = require('../variables.js');
 
 module.exports = {
   // gif
@@ -84,7 +85,7 @@ module.exports = {
 
 async function sendEmbed(msg, res, action) {
   let mbd = new Discord.MessageEmbed()
-    .setColor('#FFFFFF')
+    .setColor(await variables.embedColor())
     //.setFooter(await variables.footer(), await variables.footerImage())
     .setImage(res.url);
   let name = msg.content.split(' ')[2];

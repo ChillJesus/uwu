@@ -1105,11 +1105,11 @@ module.exports = {
       }
       try {
         btn_n = new disbut.MessageButton()
-          .setStyle('blurple')
+          .setStyle(await variables.colorPrimary())
           .setLabel('Next')
           .setID('saucedNextPage');
         btn_p = new disbut.MessageButton()
-          .setStyle('red')
+          .setStyle(await variables.colorSecondary())
           .setLabel('Previous')
           .setID('saucedPreviousPage')
           .setDisabled();

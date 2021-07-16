@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const variables = require('../variables.js');
 
 module.exports = {
   nextPage: async function(button, disbut, saucingData) {
@@ -6,11 +7,11 @@ module.exports = {
     saucingData[button.message.id].id = parseInt(saucingData[button.message.id].id+1);
     let mbd = saucingData[button.message.id][saucingData[button.message.id].id];
     let btn_n = new disbut.MessageButton()
-      .setStyle('blurple')
+      .setStyle(await variables.colorPrimary())
       .setLabel('Next')
       .setID('saucedNextPage');
     let btn_p = new disbut.MessageButton()
-      .setStyle('red')
+      .setStyle(await variables.colorSecondary())
       .setLabel('Previous')
       .setID('saucedPreviousPage');
     if(saucingData[button.message.id].id == length) {
@@ -33,11 +34,11 @@ module.exports = {
     saucingData[button.message.id].id = parseInt(saucingData[button.message.id].id-1);
     let mbd = saucingData[button.message.id][saucingData[button.message.id].id];
     let btn_n = new disbut.MessageButton()
-      .setStyle('blurple')
+      .setStyle(await variables.colorPrimary())
       .setLabel('Next')
       .setID('saucedNextPage');
     let btn_p = new disbut.MessageButton()
-      .setStyle('red')
+      .setStyle(await variables.colorSecondary())
       .setLabel('Previous')
       .setID('saucedPreviousPage');
     if(saucingData[button.message.id].id == 0) {

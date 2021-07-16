@@ -1,5 +1,6 @@
 const Discrod = require('discord.js');
 const HMfull = require('hmfull');
+const variables = require('../variables.js');
 
 module.exports = {
   // image

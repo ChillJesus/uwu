@@ -6,27 +6,27 @@ module.exports = {
   send: async function(msg) {
     let mbd = new Discord.MessageEmbed()
       .setTitle("Nekotai Commands")
-      .setColor('#0099ff')
+      .setColor(await variables.embedColor())
       .setFooter(await variables.footer(), await variables.footerImage())
       .addFields({
         name: "Commands",
         value: await variables.commandsSFW()
       });
     let btnSFW = new disbut.MessageButton()
-      .setStyle('blurple')
+      .setStyle(await variables.colorPrimary())
       .setLabel('Commands')
       .setID('commandsSFW')
       .setDisabled();
     let btnNSFW = new disbut.MessageButton()
-      .setStyle('red')
+      .setStyle(await variables.colorSecondary())
       .setLabel('NSFW')
       .setID('commandsNSFW');
     let btnCommandsSFWImage = new disbut.MessageButton()
-      .setStyle('blurple')
+      .setStyle(await variables.colorPrimary())
       .setLabel('Pics')
       .setID('commandsSFWimage');
     let btnCommandsSFWGif = new disbut.MessageButton()
-      .setStyle('blurple')
+      .setStyle(await variables.colorPrimary())
       .setLabel('Gifs')
       .setID('commandsSFWgif');
     if(!msg.channel.nsfw) { btnNSFW.setDisabled(); }
