@@ -12,7 +12,22 @@ disbut(disClient);
 var doujinData = {};
 var saucingData = {};
 
-const prefix = ".nt ";
+// stuff youprobably dont want, debug only
+const spamChannel = process.env.SPAM_CHANNEL;
+const botAuthor = process.env.BOT_AUTHOR;
+
+// sets everything for the bot, names / colors / etc
+const variables = require('./cogs/variables.js');
+let prefix;
+let dev = false;
+if(process.argv[2] === 'dev') {
+  prefix = '.nt ';
+  dev = true;
+} else {
+  prefix = '.n ';
+}
+
+
 // regex for matching commands / numbers
 const doujinRegex = new RegExp("^[0-9]{1,6}$");
 const doujinPageRegex = new RegExp("^[0-9]{1,3}$");
@@ -54,8 +69,8 @@ disClient.on('ready', () => {
 disClient.on('message', async msg => {
   if (msg.channel.type === 'dm' && !msg.author.bot) {
     try {
-      await disClient.channels.cache.get('865136108369870898').send(`Message from: ${msg.author.username} / ${msg.author.id}`);
-      await disClient.channels.cache.get('865136108369870898').send(msg.content);
+      await disClient.channels.cache.get(spamChannel).send(`Message from: ${msg.author.username} / ${msg.author.id}`);
+      await disClient.channels.cache.get(spamChannel).send(msg.content);
     } catch(error) {
       console.log("Couldn't send message to spam channel");
       console.log(error);
@@ -427,14 +442,29 @@ disClient.on('message', async msg => {
       break;
     // Private
     case "read":
-      if (msg.author.id === '194498932041187328') {
+      if (msg.author.id === botAuthor) {
         cmd_read.send(msg, disClient);
       }
       break;
+
+    // TODO
+    case "eyebleach":
+      break;
+    case "reverse":
+      break;
+    case "features":
+      break;
+    case "mal":
+      break;
+    case "stats":
+      break;
+    default:
+      cmd_help.send(msg);
+      break;
   }
 
-  // NSFW Commands
-  // Weeb Stuff
+  // I should really move this to its own file
+  // And find a way to throw it in that switch case
   if (doujinRegex.test(flags[1]) && msg.channel.nsfw) {
     let page;
     let sent;
@@ -459,6 +489,7 @@ disClient.on('message', async msg => {
     let mbd = new Discord.MessageEmbed()
       .setImage(doujinDataTmp[0][page])
       .setTitle(doujinDataTmp[1])
+      .setColor(await variables.embedColor())
       .addFields({
         name: "Page",
         value: `${page}/${doujinDataTmp[0].length-1}`
@@ -469,11 +500,11 @@ disClient.on('message', async msg => {
       mbd.setFooter("No tags found" + "\u3000".repeat(25))
     }
     let btn_n = new disbut.MessageButton()
-      .setStyle('blurple')
+      .setStyle(await variables.colorSecondary())
       .setLabel('Next')
       .setID('nhentaiNextPage');
     let btn_p = new disbut.MessageButton()
-      .setStyle('red')
+      .setStyle(await variables.colorPrimary())
       .setLabel('Previous')
       .setID('nhentaiPreviousPage');
     if (page <= 0) {
@@ -494,25 +525,6 @@ disClient.on('message', async msg => {
       [sent.id]: doujinDataTmp
     });
     doujinDataTmp = [];
-  }
-  // TODO
-  if (flags[1] == 'eyebleach') {
-    return;
-  }
-  if (flags[1] == 'whois') {
-    return;
-  }
-  if (flags[1] == 'reverse') {
-    return;
-  }
-  if (flags[1] == 'features') {
-    return;
-  }
-  if (flags[1] == 'mal') {
-    return;
-  }
-  if (flags[1] == 'stats' && msg.author.id == '194498932041187328') {
-    return;
   }
 });
 
