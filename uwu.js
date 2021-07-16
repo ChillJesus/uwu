@@ -77,7 +77,11 @@ disClient.on('message', async msg => {
     }
   }
   // Only take commands with the prefix, from non bots
-  if (!msg.content.startsWith(prefix) | msg.author.bot) { return; }
+  if (!msg.content.startsWith(prefix) | msg.author.bot) {
+    if(!msg.mentions.has(disClient.user)) {
+      return;
+    }
+  }
   console.log(`Received command from ${msg.author}: ${msg.content}`);
   flags = msg.content.split(' ');
 
@@ -458,9 +462,9 @@ disClient.on('message', async msg => {
       break;
     case "stats":
       break;
-    default:
-      cmd_help.send(msg);
-      break;
+    //default:
+    //  cmd_help.send(msg);
+    //  break;
   }
 
   // I should really move this to its own file
