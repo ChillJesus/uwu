@@ -1,6 +1,13 @@
 const dedent = require('dedent-js');
 
 module.exports = {
+  botPrefix: async function(dev) {
+    if(dev) {
+      return ".nt ";
+    } else {
+      return ".n ";
+    }
+  },
   footer: async function() {
     return(dedent(`
       Made with love, Јesus#0001
@@ -72,6 +79,9 @@ module.exports = {
   },
   colorSecondary: async function() {
     return ('red');
+  },
+  embedColor: async function() {
+    return('#0099FF');
   },
   sauceFooter: async function() {
     return(dedent(`
