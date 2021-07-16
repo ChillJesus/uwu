@@ -77,7 +77,6 @@ module.exports = {
       } catch (error) {
         console.log("Extracting url");
         try {
-          let url = msg.content.match(urlRegex)[1];
         } catch(error) {
           console.log("Couldn't retrieve image");
           console.log(error);
@@ -90,9 +89,10 @@ module.exports = {
               return(saucingData);
           }
         }
-        console.log(res.url);
         try {
           console.log("Saucing by url");
+          let url = msg.content.match(urlRegex)[1];
+          console.log(url);
           sauced = await nSauce(url);
           await sauceTime(sauced);
           return(saucingData);
@@ -640,11 +640,11 @@ module.exports = {
                 .setAuthor(sauced[i].creator)
                 .setTitle(sauced[i].material)
                 .setThumbnail(sauced[i].thumbnail)
-                .addFields({
+                .addFields(/*{
                   name: "Characters",
                   value: sauced[i].characters,
                   inline: true
-                },{
+                },*/{
                   name: "Similarity",
                   value: sauced[i].similarity,
                   inline: true
