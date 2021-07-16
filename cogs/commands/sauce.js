@@ -90,7 +90,7 @@ module.exports = {
               return(saucingData);
           }
         }
-        console.log(url);
+        console.log(res.url);
         try {
           console.log("Saucing by url");
           sauced = await nSauce(url);
