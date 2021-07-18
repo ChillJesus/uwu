@@ -60,13 +60,19 @@ I dunno, I'm passing out as I write this so I'm sure this will get updated tonig
 ### Installation
 
 You'll need to have mongodb installed and setup, [read the docs](https://docs.mongodb.com/manual/installation/).
+
 Change the name of `config.json.editme` to `config.json` and fill out everything blank in there.
+
 If you're using a discord bot, you know how to get that token already.
 [Here's](https://saucenao.com/user.php) where you can pick up a saucenao api key.
 After that it's as simple as running
+
 `$npm install`
+
 In the root folder, modifying the config.json file to your liking, and running
+
 `$npm uwu.js`
+
 To run the bot. You can optionally put dev at the end to run with separate commands and a separate token if you're like me and use a different bot for testing.
 
 # UwU nd wutnawt hav eh goodie goodie dai OwO
