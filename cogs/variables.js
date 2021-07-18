@@ -1,69 +1,66 @@
 const dedent = require('dedent-js');
+const config = require('../config.json');
 
 module.exports = {
   botPrefix: async function(dev) {
+    // in config
     if(dev) {
-      return ".nt ";
+      return config.bot.prefix.dev;
     } else {
-      return ".n ";
+      return config.bot.prefix.prime;
     }
   },
   // in config
   footer: async function() {
-    return(dedent(`
-      Made with love, Јesus#0001
-    `));
+    return(config.bot.footer.text);
   },
   // in config
   footerImage: async function() {
-    return(dedent(`
-      https://cdn.discordapp.com/avatars/194498932041187328/a_de9fbaa107b8748a7b09ff6df3fea198.gif
-    `));
+    return(config.bot.footer.url);
   },
   commandsSFW: async function() {
     return(dedent(`
-      .n help - Good job, you figured this one out
-      .n ping - Pong!
-      .n sauce - Send or reply to image with this command to sauce it
-      .n send - Send a message as the bot
+      ${config.bot.prefix.prime}help - Good job, you figured this one out
+      ${config.bot.prefix.prime}ping - Pong!
+      ${config.bot.prefix.prime}sauce - Send or reply to image with this command to sauce it
+      ${config.bot.prefix.prime}send - Send a message as the bot
     `));
   },
   commandsSFWimage: async function() {
     return(dedent(`
-      .n wallpaper
-      .n mwallpaper
-      .n neko
-      .n jahy
-      .n kitsune
-      .n waifu
-      .n baguette
-      .n dva
-      .n yuri
-      .n anime
+      ${config.bot.prefix.prime}wallpaper
+      ${config.bot.prefix.prime}mwallpaper
+      ${config.bot.prefix.prime}neko
+      ${config.bot.prefix.prime}jahy
+      ${config.bot.prefix.prime}kitsune
+      ${config.bot.prefix.prime}waifu
+      ${config.bot.prefix.prime}baguette
+      ${config.bot.prefix.prime}dva
+      ${config.bot.prefix.prime}yuri
+      ${config.bot.prefix.prime}anime
     `));
   },
   commandsSFWgif: async function(){
     return(dedent(`
-      .n lick
-      .n slap
-      .n spank
-      .n pat
-      .n hug
-      .n kiss
-      .n cry
-      .n smug
-      .n punch
-      .n kill
-      .n stare
-      .n dance
+      ${config.bot.prefix.prime}lick
+      ${config.bot.prefix.prime}slap
+      ${config.bot.prefix.prime}spank
+      ${config.bot.prefix.prime}pat
+      ${config.bot.prefix.prime}hug
+      ${config.bot.prefix.prime}kiss
+      ${config.bot.prefix.prime}cry
+      ${config.bot.prefix.prime}smug
+      ${config.bot.prefix.prime}punch
+      ${config.bot.prefix.prime}kill
+      ${config.bot.prefix.prime}stare
+      ${config.bot.prefix.prime}dance
     `))
   },
   commandsNSFW: async function() {
     return(dedent(`
-      .n {code} - Creates a reader for nHentai
-      .n {code} {page} - Creates a reader for nHentai starting at {page}
-      .n hentai - Returns a random hentai image (see optional tags)
-      .n hgif - Returns a random hentai gif (see optional tags)
+      ${config.bot.prefix.prime}nread {code} - Creates a reader for nHentai
+      ${config.bot.prefix.prime}hentai - Returns a random hentai image (see optional tags)
+      ${config.bot.prefix.prime}hgif - Returns a random hentai gif (see optional tags)
     `))
   },
   // in config
