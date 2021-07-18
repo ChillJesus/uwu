@@ -1,6 +1,6 @@
 {
   "name": "uwu",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A discord bot filled with my brains nonsense",
   "main": "uwu.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "hmfull": "^1.2.5",
+    "mongodb": "^4.0.0",
     "nhentai-js": "^4.0.0",
     "node-sauce": "^1.0.5",
     "performance-now": "^2.1.0",

@@ -17,16 +17,22 @@ const spamChannel = process.env.SPAM_CHANNEL;
 const botAuthor = process.env.BOT_AUTHOR;
 
 // sets everything for the bot, names / colors / etc
+const config = require('./config.json');
 const variables = require('./cogs/variables.js');
+const dbCommands = require('./cogs/db/db.js');
 let prefix;
+let token;
 let dev = false;
 if(process.argv[2] === 'dev') {
-  prefix = '.nt ';
+  prefix = config.bot.prefix.dev;
+  token = config.token.discord.dev;
+  console.log(prefix);
+  console.log(token);
   dev = true;
 } else {
-  prefix = '.n ';
+  prefix = config.bot.prefix.prime;
+  token = config.token.discord.prime;
 }
-
 
 // regex for matching commands / numbers
 const doujinRegex = new RegExp("^[0-9]{1,6}$");
@@ -51,6 +57,7 @@ const cmd_sfwNekos = require('./cogs/commands/SFWnekos.js');
 const cmd_sfwNekoLove = require('./cogs/commands/SFWNekoLove.js');
 const cmd_sfwMiss = require('./cogs/commands/SFWmiss.js');
 const cmd_sfwFreaker = require('./cogs/commands/SFWfreaker.js');
+const cmd_nhentai = require('./cogs/commands/nHentai.js');
 //const cmd_eyebleach = require('./cogs/commands/eyebleach.js');
 const cmd_whois = require('./cogs/commands/whois.js');
 //const cmd_reverse = require('./cogs/commands/whois.js');
@@ -58,31 +65,30 @@ const cmd_whois = require('./cogs/commands/whois.js');
 //const cmd_mal = require('./cogs/commands/mal.js');
 //const cmd_stats= require('./cogs/commands/stats.js');
 
-
-disClient.on('ready', () => {
+disClient.on('ready', async () => {
   console.log(`Logged in as ${disClient.user.tag}!`);
-  disClient.user.setActivity('.n help | You smell weird', {
-    type: 'PLAYING'
+  disClient.user.setActivity(config.bot.activity.text, {
+    type: config.bot.activity.type
   });
+  try {
+    console.log("Connecting to mongodb");
+    db = await dbCommands.connect();
+    console.log(`Connected to ${config.mongodb.database}`);
+    console.log(db);
+  } catch(error) {
+    console.log("Could not start db");
+    console.log(error);
+  }
 });
 
 disClient.on('message', async msg => {
-  if (msg.channel.type === 'dm' && !msg.author.bot) {
-    try {
-      await disClient.channels.cache.get(spamChannel).send(`Message from: ${msg.author.username} / ${msg.author.id}`);
-      await disClient.channels.cache.get(spamChannel).send(msg.content);
-    } catch(error) {
-      console.log("Couldn't send message to spam channel");
-      console.log(error);
-    }
-  }
   // Only take commands with the prefix, from non bots
   if (!msg.content.startsWith(prefix) | msg.author.bot) {
     if(!msg.mentions.has(disClient.user)) {
       return;
     }
   }
-  console.log(`Received command from ${msg.author}: ${msg.content}`);
+  console.log(`Received command from ${msg.author.username}: ${msg.content}`);
   flags = msg.content.split(' ');
 
   switch (flags[1]) {
@@ -100,8 +106,11 @@ disClient.on('message', async msg => {
       cmd_whois.send(msg);
       break;
     // Weeb stuff
+    case "nread":
+      cmd_nhentai.send(msg, flags, disbut, db);
+      break;
     case "sauce":
-      cmd_sauce.send(msg, saucingData, disbut);
+      cmd_sauce.send(msg, db, disbut);
       break;
     case "hgif":
       if (!flags[2]) {
@@ -446,7 +455,7 @@ disClient.on('message', async msg => {
       break;
     // Private
     case "read":
-      if (msg.author.id === botAuthor) {
+      if (msg.author.id === config.bot.author) {
         cmd_read.send(msg, disClient);
       }
       break;
@@ -462,83 +471,16 @@ disClient.on('message', async msg => {
       break;
     case "stats":
       break;
-    //default:
-    //  cmd_help.send(msg);
-    //  break;
-  }
-
-  // I should really move this to its own file
-  // And find a way to throw it in that switch case
-  if (doujinRegex.test(flags[1]) && msg.channel.nsfw) {
-    let page;
-    let sent;
-    let doujinDataTmp;
-    doujin = flags[1];
-    if (doujinPageRegex.test(flags[2])) {
-      page = parseInt(flags[2]);
-    } else {
-      page = 0;
-    }
-    try {
-      // pages, title, tags
-      doujinDataTmp = await fetchdoujin(doujin, msg, page);
-    } catch (error) {
-      try {
-        await msg.channel.send('This doujin does not exist.');
-      } catch {
-        return;
-      }
-      return;
-    }
-    let mbd = new Discord.MessageEmbed()
-      .setImage(doujinDataTmp[0][page])
-      .setTitle(doujinDataTmp[1])
-      .setColor(await variables.embedColor())
-      .addFields({
-        name: "Page",
-        value: `${page}/${doujinDataTmp[0].length-1}`
-      }, )
-    try {
-      mbd.setFooter(doujinDataTmp[2].join(', ') + "\u3000".repeat(25));
-    } catch {
-      mbd.setFooter("No tags found" + "\u3000".repeat(25))
-    }
-    let btn_n = new disbut.MessageButton()
-      .setStyle(await variables.colorSecondary())
-      .setLabel('Next')
-      .setID('nhentaiNextPage');
-    let btn_p = new disbut.MessageButton()
-      .setStyle(await variables.colorPrimary())
-      .setLabel('Previous')
-      .setID('nhentaiPreviousPage');
-    if (page <= 0) {
-      btn_p.setDisabled();
-    }
-    if (page >= doujinDataTmp[0].length - 1) {
-      btn_n.setDisabled();
-    }
-    try {
-      sent = await msg.channel.send({
-        embed: mbd,
-        buttons: [btn_p, btn_n]
-      });
-    } catch {
-      return;
-    }
-    doujinData = Object.assign(doujinData, {
-      [sent.id]: doujinDataTmp
-    });
-    doujinDataTmp = [];
   }
 });
 
 disClient.on('clickButton', async (button) => {
   switch (button.id) {
     case "nhentaiNextPage":
-      doujinData = await but_nhentai.nextPage(button, disbut, doujinData);
+      but_nhentai.nextPage(button, disbut, db);
       break;
     case "nhentaiPreviousPage":
-      doujinData = await but_nhentai.previousPage(button, disbut, doujinData);
+      but_nhentai.previousPage(button, disbut, db);
       break;
     case "commandsSFW":
       but_commands.commandsSFW(button, disbut);
@@ -564,11 +506,4 @@ disClient.on('clickButton', async (button) => {
   }
 });
 
-async function fetchdoujin(doujin, id, page) {
-  if (nhentai.exists(doujin)) {
-    const doujinReply = await nhentai.getDoujin(doujin)
-    return [doujinReply.pages, doujinReply.title, doujinReply.details.tags, page];
-  }
-};
-
-disClient.login(process.env.BOT_TOKEN);
+disClient.login(token);

@@ -1,0 +1,47 @@
+{
+  "bot": {
+    "activity": {
+      "text": ".n help | You smell weird",
+      "type": "PLAYING"
+    },
+    "author": "194498932041187328",
+    "channels": {
+      "spam": ""
+    },
+    "colorPrimary": "blurple",
+    "colorSecondary": "red",
+    "embedColor": "#0099FF",
+    "footer": {
+      "text": "Made with love, Јesus#0001",
+      "url": "https://cdn.discordapp.com/avatars/194498932041187328/a_de9fbaa107b8748a7b09ff6df3fea198.gif"
+    },
+    "nsfw": {
+      "tags": {
+        "hentai": "&#96;&#96;&#96;vanilla, neko, lesbian, kuni, classic, boobs, anal,  feet, pussy, bj, pwankg, cum, spank&#96;&#96;&#96;",
+        "hgif": "&#96;&#96;&#96;tits, ero, erofeet, erokitsu, erokemo, eroyuri, eroneko, lewdkitsu, lewdneko, lewdkemo, keta, pussyJpg, cumJpg, avatar, holoero, hololewd, gasm, trap, ass, cum, creampie, femdom, manga, vanilla, incest, masturbation, public, ero, orgy, elf, yuri, pantsu, glases, cuckold, blowjob, boobjob, foot, thighs, vagina, ahegao, uniform, gangbang, tentacles, gif, neko, wallpaper, zettai&#96;&#96;&#96;"
+      }
+    },
+    "prefix": {
+      "dev": ".nt ",
+      "prime": ".n "
+    }
+  },
+  "discord": {
+  },
+  "mongodb": {
+    "url": "mongodb://127.0.0.1:27017/",
+    "database": "uwu",
+    "collection": {
+      "messages": "messages",
+      "nhentai": "nhentai",
+      "saucenao": "saucenao"
+    }
+  },
+  "token": {
+    "discord": {
+      "dev": "",
+      "prime": ""
+    },
+    "saucenao": ""
+  }
+}

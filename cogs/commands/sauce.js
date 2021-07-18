@@ -1,20 +1,20 @@
 const Discord = require('discord.js');
 const Sauce = require('node-sauce');
 const variables = require('../variables.js');
-const nSauce = new Sauce(process.env.SAUCENAO_TOKEN);
+const config = require('../../config.json');
+const nSauce = new Sauce(config.token.saucenao);
 
 // node-sauce configuration
 nSauce.numres = 10;
-// sauce function stuff
-var sauced = [];
-//var id = 0;
+
 const sauceResults = new RegExp("^[0-9]{1,3}$");
 const imageRegex = /\b(https?:\/\/\S+(?:png|jpe?g|gif)\S*)\b/;
 const urlRegex = /(https?:\/\/[^ ]*)/;
 
 module.exports = {
-  send: async function(msg, saucingData, disbut) {
+  send: async function(msg, db, disbut) {
     let sent;
+    let sauced = [];
     // Check if command includes image, or is reply to one
     // Take link of resulting image and pass to Sauce
     try {
@@ -24,7 +24,7 @@ module.exports = {
         console.log("Saucing by replied to attachment");
         sauced = await nSauce(repSauced.attachments.array()[0].url);
         await sauceTime(sauced);
-        return(saucingData);
+        return;
       } catch (error) {
         try {
           console.log("Extracting url");
@@ -34,7 +34,7 @@ module.exports = {
             console.log("Saucing by url");
             sauced = await nSauce(url);
             await sauceTime(sauced);
-            return(saucingData);
+            return;
           } catch (error) {
             console.log("Failed link nsauce");
             console.log(error);
@@ -44,7 +44,7 @@ module.exports = {
               console.log("Failed to send message");
               console.log(error);
             }
-            return(saucingData);
+            return;
           }
         } catch (error) {
           console.log("Failed url extraction");
@@ -55,7 +55,7 @@ module.exports = {
             console.log("Failed to send message");
             console.log(error);
           }
-          return(saucingData);
+          return;
         }
         console.log("Failed attachment nsauce");
         console.log(error);
@@ -65,7 +65,7 @@ module.exports = {
           console.log("Failed to send message");
           console.log(error);
         }
-        return(saucingData);
+        return;
       }
     } catch (error) {
       // Saucing image you send
@@ -73,7 +73,7 @@ module.exports = {
         console.log("Saucing by attachment");
         sauced = await nSauce(msg.attachments.array()[0].url);
         await sauceTime(sauced);
-        return(saucingData);
+        return;
       } catch (error) {
         console.log("Extracting url");
         try {
@@ -82,11 +82,11 @@ module.exports = {
           console.log(error);
           try {
             await msg.channel.send("Please send or reply to an image");
-            return(saucingData);
+            return;
           } catch(error) {
               console.log("Couldn't send message");
               console.log(error);
-              return(saucingData);
+              return;
           }
         }
         try {
@@ -95,7 +95,7 @@ module.exports = {
           console.log(url);
           sauced = await nSauce(url);
           await sauceTime(sauced);
-          return(saucingData);
+          return;
         } catch (error) {
           console.log("Failed link nsauce");
           console.log(error);
@@ -105,7 +105,7 @@ module.exports = {
             console.log("Failed to send message");
             console.log(error);
           }
-          return(saucingData);
+          return;
         }
         console.log("Failed attachment nsauce");
         console.log(error);
@@ -115,7 +115,7 @@ module.exports = {
           console.log("Failed to send message");
           console.log(error);
         }
-        return(saucingData);
+        return;
       }
     }
 
@@ -123,6 +123,7 @@ module.exports = {
     // TODO:
     //  Wrap entire function in a for statement that loops through the array built previously
     async function sauceTime(sauced) {
+      // if i try to set every isntance of this to a db call ill kill myself before im done
       let saucingDataTmp = {};
       let id = 0;
       // Goes through all of sauceNAO's indexes to generate mbd
@@ -154,7 +155,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -163,7 +164,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // pixiv
@@ -188,7 +189,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -197,7 +198,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // pixiv historical
@@ -222,7 +223,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -231,7 +232,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // Nico Nico Seiga
@@ -256,7 +257,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -265,7 +266,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // danbooru
@@ -293,7 +294,7 @@ module.exports = {
                   name: "Similarity",
                   value: sauced[i].similarity,
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());;
+                .setFooter(config.bot.footer.text, config.bot.footer.url);;
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -302,7 +303,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // drawr images
@@ -319,7 +320,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -328,7 +329,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // nijie
@@ -345,7 +346,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -354,7 +355,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // yande.re
@@ -387,7 +388,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());;
+                .setFooter(config.bot.footer.text, config.bot.footer.url);;
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -396,7 +397,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // fakku
@@ -413,7 +414,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -422,7 +423,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // nhentai
@@ -437,7 +438,7 @@ module.exports = {
                   name: "Similarity",
                   value: sauced[i].similarity,
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());;
+                .setFooter(config.bot.footer.text, config.bot.footer.url);;
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -446,7 +447,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // 2d market
@@ -463,7 +464,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -472,7 +473,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // MediBang
@@ -489,7 +490,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -498,7 +499,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // anidb
@@ -523,7 +524,7 @@ module.exports = {
                   value: sauced[i].est_time,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -532,7 +533,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // H-anime
@@ -557,7 +558,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -566,7 +567,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // gelbooru
@@ -585,7 +586,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -594,7 +595,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // konachan
@@ -619,7 +620,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -628,7 +629,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // Sankaku
@@ -649,7 +650,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -658,7 +659,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // anime-pictures.net
@@ -675,7 +676,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());;
+                .setFooter(config.bot.footer.text, config.bot.footer.url);;
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -684,7 +685,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // e621
@@ -703,7 +704,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -712,7 +713,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // idol complex
@@ -733,7 +734,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -742,7 +743,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // bcy
@@ -767,7 +768,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -776,7 +777,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // bcy cosplay
@@ -801,7 +802,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -810,7 +811,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // deviantart
@@ -831,7 +832,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());;
+                .setFooter(config.bot.footer.text, config.bot.footer.url);;
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -840,7 +841,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // Pawoo
@@ -861,7 +862,7 @@ module.exports = {
                   value: sauced[i].pawoo_id,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -870,7 +871,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // mangaupdates
@@ -894,7 +895,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -903,7 +904,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // mangadex
@@ -928,7 +929,7 @@ module.exports = {
                   value: sauced[i].part,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -937,7 +938,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // e-hentai
@@ -952,7 +953,7 @@ module.exports = {
                   name: "Similarity",
                   value: sauced[i].similarity,
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());;
+                .setFooter(config.bot.footer.text, config.bot.footer.url);;
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -961,7 +962,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // artstation
@@ -986,7 +987,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -995,7 +996,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // fur affinity
@@ -1016,7 +1017,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());;
+                .setFooter(config.bot.footer.text, config.bot.footer.url);;
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -1025,7 +1026,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // twitter
@@ -1050,7 +1051,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -1059,7 +1060,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             // furry network
@@ -1080,7 +1081,7 @@ module.exports = {
                   value: sauced[i].similarity,
                   inline: true
                 })
-                .setFooter(await variables.sauceFooter(), await variables.sauceFooterImage());
+                .setFooter(config.bot.footer.text, config.bot.footer.url);
               try {
                 saucingDataTmp = Object.assign(saucingDataTmp, {
                   [id]: mbd
@@ -1089,7 +1090,7 @@ module.exports = {
               } catch (error) {
                 console.log("Failed logging data");
                 console.log(error);
-                return(saucingData);
+                return;
               }
               break;
             default:
@@ -1101,7 +1102,7 @@ module.exports = {
       } catch(error) {
         console.log("Failed to fetch sources");
         console.log(error);
-        return(saucingData);
+        return;
       }
       try {
         btn_n = new disbut.MessageButton()
@@ -1117,10 +1118,36 @@ module.exports = {
           embed: saucingDataTmp[0],
           buttons: [btn_p, btn_n]
         });
-        saucingDataTmp.id = 0;
+
+        // for now we'll just throw the tmp object into the db and call it a day
+        // someday if i really really really give a shit ill replace the entire
+        // tmp object with db calls
+        //saucingDataTmp.id = 0;
+        try {
+          let insertion = await db.collection(config.mongodb.collection.saucenao).insertOne({
+            server: msg.guild.id,
+            user: msg.author.id,
+            sourcelist: sent.id,
+            sources: saucingDataTmp,
+            page: 0
+          });
+          return;
+        } catch(error) {
+          console.log("Failed to insert sauces to database");
+          console.log(error);
+          try {
+            await msg.channel.send("\`\`\`Error: unable to log into database\nSources won't be scrollable.\`\`\`");
+            return;
+          } catch(error) {
+            console.log("Could not send message");
+            console.log(error);
+            return;
+          }
+          return;
+        }/*
         saucingData = Object.assign(saucingData, {
           [sent.id]: saucingDataTmp
-        });
+        });*/
       } catch(error) {
         console.log("Failed sending initial message");
         console.log(error);
@@ -1129,11 +1156,11 @@ module.exports = {
         } catch(error) {
           console.log("Failed sending failed message");
           console.log(error);
-          return(saucingData);
+          return;
         }
-        return(saucingData);
+        return;
       }
-      return saucingData;
+      return;
     }
   }
 }

@@ -8,11 +8,13 @@ module.exports = {
       return ".n ";
     }
   },
+  // in config
   footer: async function() {
     return(dedent(`
       Made with love, Јesus#0001
     `));
   },
+  // in config
   footerImage: async function() {
     return(dedent(`
       https://cdn.discordapp.com/avatars/194498932041187328/a_de9fbaa107b8748a7b09ff6df3fea198.gif
@@ -64,22 +66,27 @@ module.exports = {
       .n hgif - Returns a random hentai gif (see optional tags)
     `))
   },
+  // in config
   hentaiTags: async function() {
     return(dedent(`
       \`\`\`tits, ero, erofeet, erokitsu, erokemo, eroyuri, eroneko, lewdkitsu, lewdneko, lewdkemo, keta, pussyJpg, cumJpg, avatar, holoero, hololewd, gasm, trap, ass, cum, creampie, femdom, manga, vanilla, incest, masturbation, public, ero, orgy, elf, yuri, pantsu, glases, cuckold, blowjob, boobjob, foot, thighs, vagina, ahegao, uniform, gangbang, tentacles, gif, neko, wallpaper, zettai\`\`\`
     `))
   },
+  // in config
   hgifTags: async function() {
     return(dedent(`
       \`\`\`vanilla, neko, lesbian, kuni, classic, boobs, anal,  feet, pussy, bj, pwankg, cum, spank\`\`\`
     `))
   },
+  // in config
   colorPrimary: async function() {
     return('blurple');
   },
+  // in config
   colorSecondary: async function() {
     return ('red');
   },
+  // in config
   embedColor: async function() {
     return('#0099FF');
   },

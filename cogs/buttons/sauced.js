@@ -1,60 +1,82 @@
 const Discord = require('discord.js');
 const variables = require('../variables.js');
+const config = require('../../config.json');
 
 module.exports = {
   nextPage: async function(button, disbut, saucingData) {
-    length = Object.keys(saucingData[button.message.id]).length-2;
-    saucingData[button.message.id].id = parseInt(saucingData[button.message.id].id+1);
-    let mbd = saucingData[button.message.id][saucingData[button.message.id].id];
+    let sourcelist = await db.collection(config.mongodb.collection.saucenao).find({sourcelist: button.message.id}).toArray();
+    let page = sourcelist[0].page;
+    page+=1;
+    let mbd = sourcelist[0].sources[page];
     let btn_n = new disbut.MessageButton()
-      .setStyle(await variables.colorPrimary())
+      .setStyle(config.bot.colorPrimary)
       .setLabel('Next')
       .setID('saucedNextPage');
-    let btn_p = new disbut.MessageButton()
-      .setStyle(await variables.colorSecondary())
-      .setLabel('Previous')
-      .setID('saucedPreviousPage');
-    if(saucingData[button.message.id].id == length) {
+    if(page >= Object.keys(sourcelist[0].sources).length-1) {
+      page = Object.keys(sourcelist[0].sources).length-1;
       btn_n.setDisabled();
     }
-    try {
-      await button.reply.defer();
-      await button.message.edit({
-        embed: mbd,
-        buttons: [btn_p, btn_n]
-      });
-    } catch(error) {
-      console.log("Failed to go to next page");
-      console.log(error);
-      return saucingData;
-    }
-    return saucingData;
-  },
-  previousPage: async function(button, disbut, saucingData) {
-    saucingData[button.message.id].id = parseInt(saucingData[button.message.id].id-1);
-    let mbd = saucingData[button.message.id][saucingData[button.message.id].id];
-    let btn_n = new disbut.MessageButton()
-      .setStyle(await variables.colorPrimary())
-      .setLabel('Next')
-      .setID('saucedNextPage');
     let btn_p = new disbut.MessageButton()
-      .setStyle(await variables.colorSecondary())
+      .setStyle(config.bot.colorSecondary)
       .setLabel('Previous')
       .setID('saucedPreviousPage');
-    if(saucingData[button.message.id].id == 0) {
+    if(page <= 0) {
+      page = 0;
       btn_p.setDisabled();
     }
+    let filter = { sourcelist: button.message.id };
+    let update = {
+      $set: {
+        page: page,
+      },
+    };
     try {
       await button.reply.defer();
-      await button.message.edit({
-        embed: mbd,
-        buttons: [btn_p, btn_n]
-      });
+      await button.message.edit({embed: mbd, buttons: [btn_p, btn_n]});
+      await db.collection(config.mongodb.collection.saucenao).updateOne(filter, update);
+      return;
     } catch(error) {
-      console.log("Failed to go to previous page");
+      console.log("Could not update sauce");
       console.log(error);
-      return saucingData;
+      return;
     }
-    return saucingData;
+  },
+  previousPage: async function(button, disbut, saucingData) {
+    let sourcelist = await db.collection(config.mongodb.collection.saucenao).find({sourcelist: button.message.id}).toArray();
+    let page = sourcelist[0].page;
+    page-=1;
+    let mbd = sourcelist[0].sources[page];
+    let btn_n = new disbut.MessageButton()
+      .setStyle(config.bot.colorPrimary)
+      .setLabel('Next')
+      .setID('saucedNextPage');
+    if(page >= Object.keys(sourcelist[0].sources).length-1) {
+      page = Object.keys(sourcelist[0].sources).length-1;
+      btn_n.setDisabled();
+    }
+    let btn_p = new disbut.MessageButton()
+      .setStyle(config.bot.colorSecondary)
+      .setLabel('Previous')
+      .setID('saucedPreviousPage');
+    if(page <= 0) {
+      page = 0;
+      btn_p.setDisabled();
+    }
+    let filter = { sourcelist: button.message.id };
+    let update = {
+      $set: {
+        page: page,
+      },
+    };
+    try {
+      await button.reply.defer();
+      await button.message.edit({embed: mbd, buttons: [btn_p, btn_n]});
+      await db.collection(config.mongodb.collection.saucenao).updateOne(filter, update);
+      return;
+    } catch(error) {
+      console.log("Could not update sauce");
+      console.log(error);
+      return;
+    }
   }
 }
