@@ -7,29 +7,35 @@ UwU is a self-hosted bot with awful code and inefficient functions. If you chose
 
 ### Cogs
 
-The cogs folder consists of two sub folders
+The cogs folder consists of three sub folders
 
-##### Buttons
+#### Buttons
 
-**commands.js** - handles the buttons for the help commands<br/>
-**nhentai.js** - handles the page buttons for the nhentai reader<br/>
-**sauced.js** - handles the page buttons for the image sourcing command<br/>
+This page contains all the button handlers, click something and it gets processed here
 
-##### Commands
+#### Commands
 
 I really hope this one is self explanatory, this folder contains individual files for each command and all their related functions. Most functions are used, but some are unused and just exist because I wanted to implement all of [HMTai](https://www.npmjs.com/package/hmtai)
 
+#### DB
+
+This is where I was keeping my db stuff in testing, likely to change, but feel free to yeet the bot db in there. All on you, that js file might get lonely if you don't.
+
 ### Features
 
-##### Nhentai reader
+#### MongoDB
 
-This is why I made the bot. It started off as a meme, but like all bonkable memes I got too deep and couldn't pull out. The reader pings an nHentai api to retrieve the pages of a requested doujin, loads them into an object labeled with the message id and sends an embed controlled by buttons to read it in chat.
+Because databases are better than objects, and mongodb is the best database. Subscribe to my religion, only twenty braincells a function.
 
-##### SauceNAO
+#### Nhentai reader
 
-I've implemented (most?) of the saucenao api into the sauce command. This currently retrieves 10 results and loads them into an object labeled with the message id that's controlled by buttons, letting you scroll through the different results without spamming chat.
+This is why I made the bot. It started off as a meme, but like all bonkable memes I got too deep and couldn't pull out. The reader pings an nHentai api to retrieve the pages of a requested doujin, loads them into the mongodb database and scrolls through the pages via buttons.
 
-##### Your standard action gifs
+#### SauceNAO
+
+I've implemented (most?) of the saucenao api into the sauce command. This currently retrieves 10 results and loads them into the mongodb database and lets you scroll through the different sources via buttons. No more spamming the chat for lots of results.
+
+#### Your standard action gifs
 
 Something I like about bots is being able to slap people with them, so I implemented a bunch of actions you can do.
 * `lick`
@@ -45,7 +51,7 @@ Something I like about bots is being able to slap people with them, so I impleme
 * `stare`
 * `dance`
 
-##### Other stuff
+#### Other stuff
 
 NSFW content is disabled inside of non NSFW chats by checking at the switch statement for commands, and often in the commands themselves. So that's nice I suppose, although with some of the wholesome anime pic commands you may end up popping a tiddy or two in general.
 
@@ -53,13 +59,15 @@ I dunno, I'm passing out as I write this so I'm sure this will get updated tonig
 
 ### Installation
 
-Do whatever it is you need to do to install the stuff in package.json. This is the first time I've used nodejs so no clue what that process is, I just `npm install whatever` and call it a day.
-
-Make a file called `.env`. You'll need two tokens in it
-* `BOT_TOKEN=whateveryoursis`
-* `SAUCENAO_TOKEN=whateveryoursis`
-
-Once that stuff is done, should just be able to run `npm uwu.js` and have yourself a bot.
+You'll need to have mongodb installed and setup, [read the docs](https://docs.mongodb.com/manual/installation/).
+Change the name of `config.json.editme` to `config.json` and fill out everything blank in there.
+If you're using a discord bot, you know how to get that token already.
+[Here's](https://saucenao.com/user.php) where you can pick up a saucenao api key.
+After that it's as simple as running
+`$npm install`
+In the root folder, modifying the config.json file to your liking, and running
+`$npm uwu.js`
+To run the bot. You can optionally put dev at the end to run with separate commands and a separate token if you're like me and use a different bot for testing.
 
 # UwU nd wutnawt hav eh goodie goodie dai OwO
 
