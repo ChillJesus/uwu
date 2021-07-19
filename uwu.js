@@ -82,6 +82,14 @@ disClient.on('ready', async () => {
 });
 
 disClient.on('message', async msg => {
+  if (msg.channel.type === 'dm' && !msg.author.bot) {
+    try {
+      await disClient.channels.cache.get(config.bot.channels.spam).send(`Message from: ${msg.author.username}:\n${msg.content}`);
+    } catch(error) {
+      console.log("Couldn't send message to spam channel");
+      console.log(error);
+    }
+  }
   // Only take commands with the prefix, from non bots
   if (!msg.content.startsWith(prefix) | msg.author.bot) {
     if(!msg.mentions.has(disClient.user)) {
@@ -482,27 +490,34 @@ disClient.on('clickButton', async (button) => {
     case "nhentaiPreviousPage":
       but_nhentai.previousPage(button, disbut, db);
       break;
-    case "commandsSFW":
-      but_commands.commandsSFW(button, disbut);
-      break;
-    case "commandsNSFW":
-      but_commands.commandsNSFW(button, disbut);
-      break;
-    case "commandsSFWimage":
-      but_commands.commandsSFWimage(button, disbut);
-      break;
-    case "commandsSFWgif":
-      but_commands.commandsSFWgif(button, disbut);
-      break;
-    case "commandsTags":
-      but_commands.commandsTags(button, disbut);
-      break;
     case "saucedNextPage":
       saucingData = await but_sauced.nextPage(button, disbut, saucingData);
       break;
     case "saucedPreviousPage":
       saucingData = await but_sauced.previousPage(button, disbut, saucingData);
       break;
+  }
+});
+
+disClient.on('clickMenu', async(menu) => {
+  switch(menu.values[0]) {
+    case "commandsSFW":
+      but_commands.commandsSFW(menu, disbut);
+      break;
+    case "commandsNSFW":
+      but_commands.commandsNSFW(menu, disbut);
+      break;
+    case "commandsSFWimage":
+      but_commands.commandsSFWimage(menu, disbut);
+      break;
+    case "commandsSFWgif":
+      but_commands.commandsSFWgif(menu, disbut);
+      break;
+    case "commandsTags":
+      but_commands.commandsTags(menu, disbut);
+      break;
+    case "botInfo":
+      cmd_help.info(menu, disClient);
   }
 });
 

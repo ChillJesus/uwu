@@ -43,7 +43,9 @@ module.exports = {
   cry: async function(msg) {
     let res = await HMfull.NekoLove.sfw.cry();
     try {
-      sendEmbed(msg, res, "cry");
+      let action1 = "is now crying, apologize";
+      let action2 = "is breaking inside";
+      sendEmbed(msg, res, action1, action2);
       //await msg.channel.send(res.url);
       return;
     } catch (error) {
@@ -56,7 +58,9 @@ module.exports = {
   slap: async function(msg) {
     let res = await HMfull.NekoLove.sfw.slap();
     try {
-      sendEmbed(msg, res, "slap");
+      let action1 = "slaps";
+      let action2 = "slaps themselves";
+      sendEmbed(msg, res, action1, action2);
       //await msg.channel.send(res.url);
       return;
     } catch (error) {
@@ -81,7 +85,9 @@ module.exports = {
   punch: async function(msg) {
     let res = await HMfull.NekoLove.sfw.punch();
     try {
-      sendEmbed(msg, res, "punch");
+      let action1 = "punches";
+      let action2 = "is punching wildly, beware";
+      sendEmbed(msg, res, action1, action2);
       //await msg.channel.send(res.url);
       return;
     } catch (error) {
@@ -128,7 +134,7 @@ module.exports = {
   }
 }
 
-async function sendEmbed(msg, res, action) {
+async function sendEmbed(msg, res, action1, action2) {
   let mbd = new Discord.MessageEmbed()
     .setColor(await variables.embedColor())
     //.setFooter(await variables.footer(), await variables.footerImage())
@@ -136,7 +142,8 @@ async function sendEmbed(msg, res, action) {
   let name = msg.content.split(' ')[2];
   if(name != null) {
     try {
-      mbd.setDescription(`${msg.author} gives **${name}** a ${action}`)
+      let action = action1;
+      mbd.setDescription(`${msg.author} ${action} **${name}**`)
       await msg.channel.send({embed: mbd});
       return;
     } catch(error) {
@@ -146,7 +153,8 @@ async function sendEmbed(msg, res, action) {
     }
   } else {
     try {
-      mbd.setDescription(`${msg.author} ${action}'s themselves, good job :)`);
+      let action = action2;
+      mbd.setDescription(`${msg.author} ${action}`);
       await msg.channel.send({embed: mbd});
       return;
     } catch(error) {

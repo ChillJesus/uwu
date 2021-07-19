@@ -55,7 +55,9 @@ module.exports = {
   lick: async function(msg) {
     let res = await HMfull.HMtai.sfw.lick();
     try {
-      sendEmbed(msg, res, "lick");
+      let action1 = "is licking";
+      let action2 = "licks... themselves?";
+      sendEmbed(msg, res, action1, action2);
       //await msg.channel.send(res.url);
       return;
     } catch (error) {
@@ -68,7 +70,9 @@ module.exports = {
   slap: async function(msg) {
     let res = await HMfull.HMtai.sfw.slap();
     try {
-      sendEmbed(msg, res, "spank");
+      let action1 = "gives a good spanking to";
+      let action2 = "is spanking themself";
+      sendEmbed(msg, res, action1, action2);
       //await msg.channel.send(res.url);
       return;
     } catch (error) {
@@ -79,7 +83,7 @@ module.exports = {
   }
 }
 
-async function sendEmbed(msg, res, action) {
+async function sendEmbed(msg, res, action1, action2) {
   let mbd = new Discord.MessageEmbed()
     .setColor(await variables.embedColor())
     //.setFooter(await variables.footer(), await variables.footerImage())
@@ -87,7 +91,8 @@ async function sendEmbed(msg, res, action) {
   let name = msg.content.split(' ')[2];
   if(name != null) {
     try {
-      mbd.setDescription(`${msg.author} gives **${name}** a ${action}`)
+      let action = action1;
+      mbd.setDescription(`${msg.author} ${action} **${name}**`)
       await msg.channel.send({embed: mbd});
       return;
     } catch(error) {
@@ -97,7 +102,8 @@ async function sendEmbed(msg, res, action) {
     }
   } else {
     try {
-      mbd.setDescription(`${msg.author} ${action}'s themselves, good job :)`);
+      let action = action2;
+      mbd.setDescription(`${msg.author} ${action}`);
       await msg.channel.send({embed: mbd});
       return;
     } catch(error) {
