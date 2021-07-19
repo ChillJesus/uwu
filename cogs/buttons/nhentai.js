@@ -73,7 +73,7 @@ async function updateDoujin(menu, disbut, db, page, book, button) {
     }
     let pg_m = new disbut.MessageMenu()
       .setID("nhentaiPages")
-      .setPlaceholder("Pages")
+      .setPlaceholder(`Page ${page}`)
       .setMaxValues(1)
       .setMinValues(1);
     let pagesItems = {};
