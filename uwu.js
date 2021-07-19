@@ -518,6 +518,12 @@ disClient.on('clickMenu', async(menu) => {
       break;
     case "botInfo":
       cmd_help.info(menu, disClient);
+      break;
+  }
+  switch(menu.id) {
+    case "nhentaiPages":
+      but_nhentai.setPage(menu, disbut, db)
+      break;
   }
 });
 
