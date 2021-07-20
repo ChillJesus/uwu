@@ -1,79 +1,78 @@
-
-<h1 align="center">UwU hai thur~</h1>
-
-# Overview
+# UwU
 
 UwU is a self-hosted bot with awful code and inefficient functions. If you chose to use it, please only do so after checking out the code for yourself. Because I haven't laid down a single line of it without the need of a lethal injections worth of caffeine. It's not modular, adaptable, or fancy. Now with that out of the way, on to the features!
 
-### Cogs
+## Installation
 
-The cogs folder consists of three sub folders
+You'll need [NodeJS](https://nodejs.org) and [MongoDB](https://www.mongodb.com/) installed
 
-#### Buttons
+```bash
+apt install nodejs npm
+curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+sudo apt update
+sudo apt install mongodb-org
+```
 
-This page contains all the button handlers, click something and it gets processed here
+Then just go into where you cloned the repo and install dependencies via npm
 
-#### Commands
+```bash
+npm install
+```
 
-I really hope this one is self explanatory, this folder contains individual files for each command and all their related functions. Most functions are used, but some are unused and just exist because I wanted to implement all of [HMTai](https://www.npmjs.com/package/hmtai)
+## Usage
 
-#### DB
+There's two ways to launch the bot, either the standard way or with the dev flag. If you launch with the dev flag, it will use the dev api key and dev prefix, so make sure you set those
 
-This is where I was keeping my db stuff in testing, likely to change, but feel free to yeet the bot db in there. All on you, that js file might get lonely if you don't.
+```python
+node uwu.js
+node uwu.js dev
+```
 
-### Features
+## Features
 
-#### MongoDB
+### General
 
-Because databases are better than objects, and mongodb is the best database. Subscribe to my religion, only twenty braincells a function.
+#### Server configs
 
-#### Nhentai reader
+*[Being worked on]* This bot will feature server configs, which will allow admins to modify certain aspect, for example if the nsfw commands should be allowed, a white/blacklist of who can access commands, etc. These will be managed in the mongodb and accessed by a dm'd embed which uses dropdown menus to navigate and toggle features.
 
-This is why I made the bot. It started off as a meme, but like all bonkable memes I got too deep and couldn't pull out. The reader pings an nHentai api to retrieve the pages of a requested doujin, loads them into the mongodb database and scrolls through the pages via buttons.
+#### Send
+
+A pretty basic command that allows you to send a message as the bot. Useful for channels where being anonymous is nice, such as ranting channels or places to to talk about personal stuff. When used it will first send a copied message of what you sent, then attempt to delete the original message.
+
+### SFW
 
 #### SauceNAO
 
-I've implemented (most?) of the saucenao api into the sauce command. This currently retrieves 10 results and loads them into the mongodb database and lets you scroll through the different sources via buttons. No more spamming the chat for lots of results.
+The `.n sauce` feature utilizes the [SauceNAO](https://saucenao.com/) api to retrieve similar results of the image either replied to or sent. The results are loaded into a paginated embed that can be scrolled through with buttons, showing details on each results as well as similarity. In future updates I'll likely replace the buttons wth a dropdown menu.
 
-#### Your standard action gifs
+#### Reaction / Action gifs
 
-Something I like about bots is being able to slap people with them, so I implemented a bunch of actions you can do.
-* `lick`
-* `slap`
-* `spank`
-* `pat`
-* `hug`
-* `kiss`
-* `cry`
-* `smug`
-* `punch`
-* `kill`
-* `stare`
-* `dance`
+Like many other bots out there, this one utilizes a couple different api's to send reaction gifs. For example the command `.n lick` will send a gif relating to licking, it can be used in two ways, either with text afterwards such that the message references it, or by itself such that the message references the sender.
 
-#### Other stuff
+#### General Images / Gifs
 
-NSFW content is disabled inside of non NSFW chats by checking at the switch statement for commands, and often in the commands themselves. So that's nice I suppose, although with some of the wholesome anime pic commands you may end up popping a tiddy or two in general.
+Like above, the bot utilizes a couple different api's to retrieve images or gifs of general stuff. I.e. `.n kitsune` to retrieve some cute kitsune pics, or `.n anime` to retrieve some random anime pic.
 
-I dunno, I'm passing out as I write this so I'm sure this will get updated tonight to be a better readme anyways because I get OCD about that kinda thing.
+### NSFW
 
-### Installation
+#### nHentai
 
-You'll need to have mongodb installed and setup, [read the docs](https://docs.mongodb.com/manual/installation/).
+This is a reader for nhentai, running `.n nread {doujin}` will create a reader in chat that uses buttons to scroll through the pages, as well as a drop-down menu to jump to specific pages. Menus are limited to 25 items, so if the doujin is above that limit the menu spaces them out accordingly (for example, a 50 page doujin will have a menu for pages 1, 3, 5, 7, 9, etc).
 
-Change the name of `config.json.editme` to `config.json` and fill out everything blank in there.
+#### Images / Gifs
 
-If you're using a discord bot, you know how to get that token already.
-[Here's](https://saucenao.com/user.php) where you can pick up a saucenao api key.
-After that it's as simple as running
+This bot, like many others, uses a couple apis to send images and gifs. The `.n hgif` and `.n hentai` commands will each send random ones out of their respective tags. You can append one of the tags to specify the content you want.
 
-`$npm install`
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-In the root folder, modifying the config.json file to your liking, and running
+Please make sure to update tests as appropriate.
 
-`$npm uwu.js`
+## License
 
-To run the bot. You can optionally put dev at the end to run with separate commands and a separate token if you're like me and use a different bot for testing.
+[GPL v3.0](https://github.com/ChillJesus/uwu/blob/master/LICENSE)
 
 # UwU nd wutnawt hav eh goodie goodie dai OwO
 
